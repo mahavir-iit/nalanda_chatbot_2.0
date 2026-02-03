@@ -1,0 +1,28 @@
+# Ignore cache files
+backend/acc-register-cache-*.json
+
+# Ignore log files
+backend/query-log.txt
+
+# Ignore rate limiter storage
+backend/*.tmp
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Ignore editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Ignore temporary files
+*.tmp
+*.bak
+*.old
+
+# Keep Excel file but ignore temporary Excel files
+~$*.xlsx
