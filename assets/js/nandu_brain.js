@@ -354,10 +354,14 @@ class NalandaBrain {
                           '&limit=5';
             
             console.log('🔍 Searching books for:', searchTerm);
+            console.log('📍 API URL:', apiUrl);
             const response = await fetch(apiUrl);
+            console.log('📡 Response status:', response.status, response.statusText);
             const data = await response.json();
+            console.log('📦 API Response:', data);
             
             if (!data.success) {
+                console.error('❌ Search failed:', data);
                 return {
                     response: '❌ Search failed. Please try again or <a href="' + data.opacUrl + '" target="_blank" style="color: #42b72a; font-weight: bold;">search OPAC →</a>',
                     response_type: "book_search_error"
@@ -367,6 +371,7 @@ class NalandaBrain {
             let html = `<strong>Search Results for: "${searchTerm}"</strong><br><br>`;
             
             if (data.results && data.results.length > 0) {
+                console.log(`✅ Found ${data.results.length} books, generating HTML...`);
                 html += `<strong>${data.totalResults} Book(s) Found:</strong><br><br>`;
                 
                 data.results.forEach((book, idx) => {
@@ -409,6 +414,8 @@ class NalandaBrain {
             // Always show OPAC search link
             html += `<a href="${data.opacUrl}" target="_blank" style="background: #42b72a; color: white; padding: 12px 16px; border-radius: 4px; text-decoration: none; font-weight: bold; display: inline-block; text-align: center; width: 100%; box-sizing: border-box;">Search Catalogue →</a>`;
             
+            console.log('✅ Generated HTML length:', html.length);
+            console.log('📤 Returning response...');
             return {
                 response: html,
                 response_type: "book_search",
@@ -417,9 +424,10 @@ class NalandaBrain {
             };
             
         } catch (error) {
-            console.error('Book search error:', error);
+            console.error('❌ Book search error:', error);
+            console.error('Error stack:', error.stack);
             return {
-                response: '🔗 <a href="https://opac.iitrpr.ac.in/" target="_blank" style="background: #42b72a; color: white; padding: 10px 14px; border-radius: 4px; text-decoration: none; font-weight: bold;">📖 Open OPAC Catalogue</a><br><br>Search our complete collection of 25,000+ books directly!',
+                response: '<a href="https://opac.iitrpr.ac.in/" target="_blank" style="background: #42b72a; color: white; padding: 6px 10px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 13px;">📖 Open OPAC Catalogue</a><br><br>Search our complete collection of 25,000+ books directly!',
                 response_type: "book_search_fallback"
             };
         }

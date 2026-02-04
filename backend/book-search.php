@@ -5,7 +5,7 @@
  */
 
 // Security Headers
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: https://www.iitrpr.ac.in');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
@@ -15,8 +15,9 @@ header('X-XSS-Protection: 1; mode=block');
 header('Referrer-Policy: strict-origin-when-cross-origin');
 header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'");
 
-// Force HTTPS
-if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === 'off') {
+// Force HTTPS (except for localhost development)
+$isLocalhost = in_array($_SERVER['HTTP_HOST'], ['localhost', '127.0.0.1', '::1'], true);
+if (!$isLocalhost && (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === 'off')) {
     header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
     exit();
 }
@@ -38,7 +39,7 @@ if (basename($_SERVER['PHP_SELF']) === 'book-search.php') {
             'success' => false,
             'message' => 'Too many requests. Please try again later.',
             'code' => 'RATE_LIMIT_EXCEEDED'
-        ]);
+        ], JSON_UNESCAPED_UNICODE);
         exit();
     }
     
@@ -54,7 +55,7 @@ if (basename($_SERVER['PHP_SELF']) === 'book-search.php') {
             'message' => 'Please enter at least 2 characters to search',
             'code' => 'INVALID_QUERY',
             'opacUrl' => 'https://opac.iitrpr.ac.in/'
-        ]);
+        ], JSON_UNESCAPED_UNICODE);
         exit();
     }
 
@@ -87,7 +88,7 @@ if (basename($_SERVER['PHP_SELF']) === 'book-search.php') {
         'results' => $results,
         'opacUrl' => $opacUrl,
         'message' => count($results) > 0 ? 'Books found in OPAC' : 'No books found - view OPAC for complete search'
-    ]);
+    ], JSON_UNESCAPED_UNICODE);
 }
 
 /**

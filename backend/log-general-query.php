@@ -5,7 +5,7 @@
  */
 
 // Security Headers
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: https://www.iitrpr.ac.in');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
@@ -27,7 +27,7 @@ $rateLimiter = new RateLimiter(40, 60); // 40 requests per minute
 
 if (!$rateLimiter->checkLimit()) {
     http_response_code(429);
-    echo json_encode(['success' => false, 'error' => 'Rate limit exceeded']);
+    echo json_encode(['success' => false, 'error' => 'Rate limit exceeded'], JSON_UNESCAPED_UNICODE);
     exit();
 }
 
@@ -41,11 +41,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validate query length
     if (!empty($query) && strlen($query) <= 1000) {
         logQuery($query, 'general_query', 0);
-        echo json_encode(['success' => true, 'logged' => true]);
+        echo json_encode(['success' => true, 'logged' => true], JSON_UNESCAPED_UNICODE);
     } else {
-        echo json_encode(['success' => false, 'error' => 'Invalid query']);
+        echo json_encode(['success' => false, 'error' => 'Invalid query'], JSON_UNESCAPED_UNICODE);
     }
 } else {
     http_response_code(405);
-    echo json_encode(['success' => false, 'error' => 'Method not allowed']);
+    echo json_encode(['success' => false, 'error' => 'Method not allowed'], JSON_UNESCAPED_UNICODE);
 }

@@ -8,7 +8,7 @@
 // Only include dependencies if accessed directly as API endpoint
 if (basename($_SERVER['PHP_SELF']) === 'book-suggestions.php') {
     // Security Headers
-    header('Content-Type: application/json');
+    header('Content-Type: application/json; charset=utf-8');
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: GET, OPTIONS');
     header('Access-Control-Allow-Headers: Content-Type');
@@ -394,7 +394,7 @@ if (basename($_SERVER['PHP_SELF']) === 'book-suggestions.php' && $_SERVER['REQUE
     $suggester = new BookSuggestions();
     $result = $suggester->getSuggestions($query, $filePath, $cachePath, $limit, $type);
     
-    echo json_encode($result, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    echo json_encode($result, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
     exit();
 }
 
