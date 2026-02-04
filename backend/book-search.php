@@ -245,8 +245,12 @@ function searchAccessionRegister($filePath, $query, $limit = 5, $opacStatusMap =
         }
 
         if ($score > 0) {
-            // Generate OPAC URL for this specific book (title only, no author)
-            $bookOpacUrl = 'https://opac.iitrpr.ac.in/cgi-bin/koha/opac-search.pl?q=' . urlencode($title);
+            // Generate OPAC URL for this specific book (title + author for precise results)
+            $searchQuery = trim($title);
+            if (!empty($author)) {
+                $searchQuery .= ' ' . trim($author);
+            }
+            $bookOpacUrl = 'https://opac.iitrpr.ac.in/cgi-bin/koha/opac-search.pl?q=' . urlencode($searchQuery);
             
             $results[] = [
                 'id' => $accessionNumber,

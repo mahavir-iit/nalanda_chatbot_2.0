@@ -412,7 +412,7 @@ class NalandaBrain {
             }
             
             // Always show OPAC search link
-            html += `<a href="${data.opacUrl}" target="_blank" style="background: #42b72a; color: white; padding: 12px 16px; border-radius: 4px; text-decoration: none; font-weight: bold; display: inline-block; text-align: center; width: 100%; box-sizing: border-box;">Search Catalogue →</a>`;
+            html += `<a href="${data.opacUrl}" target="_blank" style="background: #42b72a; color: white; padding: 12px 16px; border-radius: 4px; text-decoration: none; font-weight: bold; display: inline-block; text-align: center; width: 100%; box-sizing: border-box;">For more results click here</a>`;
             
             console.log('✅ Generated HTML length:', html.length);
             console.log('📤 Returning response...');
