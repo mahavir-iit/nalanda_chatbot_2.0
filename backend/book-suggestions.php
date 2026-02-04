@@ -5,10 +5,25 @@
  * Version: 2.0 - Now with intelligent topic mapping
  */
 
-header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+// Only include dependencies if accessed directly as API endpoint
+if (basename($_SERVER['PHP_SELF']) === 'book-suggestions.php') {
+    // Security Headers
+    header('Content-Type: application/json');
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Methods: GET, OPTIONS');
+    header('Access-Control-Allow-Headers: Content-Type');
+    header('X-Content-Type-Options: nosniff');
+    header('X-Frame-Options: DENY');
+    header('X-XSS-Protection: 1; mode=block');
+    header('Referrer-Policy: strict-origin-when-cross-origin');
 
-require_once 'book-search.php';
+    if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+        http_response_code(200);
+        exit();
+    }
+}
+
+// Include dependencies (but only xlsx-reader to avoid circular includes)
 require_once 'xlsx-reader.php';
 
 class BookSuggestions {
@@ -366,8 +381,8 @@ class BookSuggestions {
     }
 }
 
-// Handle API request
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['q'])) {
+// Handle API request (only when accessed directly)
+if (basename($_SERVER['PHP_SELF']) === 'book-suggestions.php' && $_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['q'])) {
     $query = isset($_GET['q']) ? trim($_GET['q']) : '';
     $limit = isset($_GET['limit']) ? min((int)$_GET['limit'], 20) : 15;
     $type = isset($_GET['type']) ? $_GET['type'] : 'auto';
